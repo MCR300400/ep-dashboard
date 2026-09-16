@@ -48,7 +48,8 @@ const valoriSparkline = computed(() => {
     </td>
     <td class="colonna-azione text-right">
       <RouterLink :to="`/siti/${sito.id}`" class="pulsante-dettaglio">
-        Dettagli &rarr;
+        <span>Dettagli</span>
+        <span class="freccia-dettaglio">&rarr;</span>
       </RouterLink>
     </td>
   </tr>
@@ -56,21 +57,24 @@ const valoriSparkline = computed(() => {
 
 <style scoped>
 .riga-sito td {
-  padding: 1rem 0.75rem;
-  border-bottom: 1px solid #f1f5f9;
+  padding: 1.05rem 0.85rem;
+  border-bottom: 1px solid var(--bordo-sottile);
   vertical-align: middle;
+  transition: background-color 0.15s ease;
 }
 
-@media (prefers-color-scheme: dark) {
-  .riga-sito td {
-    border-bottom-color: #1e293b;
-  }
+.riga-sito:hover td {
+  background-color: var(--bg-superficie-elevata);
+}
+
+.colonna-stato {
+  width: 44px;
 }
 
 .pallino-stato {
   display: inline-block;
-  width: 10px;
-  height: 10px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
 }
 
@@ -85,42 +89,38 @@ const valoriSparkline = computed(() => {
 }
 
 .pallino-stato.grigio {
-  background-color: #94a3b8;
+  background-color: var(--testo-terziario);
 }
 
 .colonna-sito {
   display: flex;
   flex-direction: column;
+  gap: 0.15rem;
 }
 
 .nome-sito {
-  font-weight: 600;
-  color: #0f172a;
+  font-weight: 650;
+  color: var(--testo-primario);
   text-decoration: none;
   font-size: 0.95rem;
+  transition: color 0.15s ease;
 }
 
 .nome-sito:hover {
-  color: #2563eb;
-}
-
-@media (prefers-color-scheme: dark) {
-  .nome-sito {
-    color: #f8fafc;
-  }
-  .nome-sito:hover {
-    color: #60a5fa;
-  }
+  color: var(--accento);
 }
 
 .dominio-sito {
-  font-size: 0.8rem;
-  color: #64748b;
+  font-size: 0.78rem;
+  color: var(--testo-terziario);
+  font-family: ui-monospace, monospace;
 }
 
 .valore-principale {
-  font-weight: 600;
+  font-weight: 650;
   font-size: 0.95rem;
+  color: var(--testo-primario);
+  font-variant-numeric: tabular-nums;
 }
 
 .text-right {
@@ -130,27 +130,50 @@ const valoriSparkline = computed(() => {
 .sparkline-wrapper {
   display: flex;
   justify-content: center;
-  color: #2563eb;
+  color: var(--accento);
 }
 
-@media (prefers-color-scheme: dark) {
-  .sparkline-wrapper {
-    color: #60a5fa;
-  }
+.colonna-azione {
+  white-space: nowrap;
+  width: 130px;
+  min-width: 130px;
 }
 
 .pulsante-dettaglio {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  white-space: nowrap;
   font-size: 0.82rem;
-  font-weight: 500;
-  color: #2563eb;
+  font-weight: 650;
+  color: var(--accento);
   text-decoration: none;
-  padding: 0.35rem 0.7rem;
-  border-radius: 6px;
-  background: rgba(37, 99, 235, 0.06);
-  transition: all 0.15s ease;
+  padding: 0.42rem 0.85rem;
+  border-radius: 8px;
+  background: var(--accento-sfondo);
+  border: 1px solid var(--accento-bordo);
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+  box-sizing: border-box;
 }
 
 .pulsante-dettaglio:hover {
-  background: rgba(37, 99, 235, 0.15);
+  background: var(--accento);
+  color: #ffffff;
+  border-color: var(--accento);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px var(--accento-sfondo-hover);
+}
+
+.freccia-dettaglio {
+  display: inline-block;
+  font-size: 0.92rem;
+  line-height: 1;
+  transition: transform 0.18s ease;
+}
+
+.pulsante-dettaglio:hover .freccia-dettaglio {
+  transform: translateX(3px);
 }
 </style>

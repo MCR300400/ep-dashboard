@@ -4,7 +4,19 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EP Analytics Dashboard — Gestionale</title>
+    <title>EP Analytics Dashboard — Gestionale Privato</title>
+    <meta name="description" content="Dashboard privata di monitoraggio traffico e metriche multi-sito per l'ecosistema Cloudflare." />
+    <script>
+      (function () {
+        try {
+          var salvato = localStorage.getItem('ep_tema');
+          var tema = (salvato === 'light' || salvato === 'dark') ? salvato : 'dark';
+          document.documentElement.setAttribute('data-theme', tema);
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="app"></div>

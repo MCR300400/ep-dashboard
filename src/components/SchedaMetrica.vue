@@ -17,64 +17,51 @@ defineProps({
 
 <style scoped>
 .scheda-metrica {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  padding: 1.25rem 1.5rem;
+  background: var(--bg-superficie);
+  border: 1px solid var(--bordo-medio);
+  border-radius: 12px;
+  padding: 1.25rem 1.4rem;
   display: flex;
   flex-direction: column;
+  box-shadow: var(--ombra-scheda);
+  transition: transform 0.18s ease, border-color 0.18s ease;
 }
 
-@media (prefers-color-scheme: dark) {
-  .scheda-metrica {
-    background: #1e293b;
-    border-color: #334155;
-  }
+.scheda-metrica:hover {
+  transform: translateY(-2px);
+  border-color: var(--accento-bordo);
 }
 
 .etichetta {
-  font-size: 0.8rem;
-  font-weight: 600;
+  font-size: 0.75rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: #64748b;
-  margin-bottom: 0.4rem;
-}
-
-@media (prefers-color-scheme: dark) {
-  .etichetta {
-    color: #94a3b8;
-  }
+  letter-spacing: 0.05em;
+  color: var(--testo-terziario);
+  margin-bottom: 0.45rem;
 }
 
 .valore {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: #0f172a;
-  line-height: 1.2;
-}
-
-@media (prefers-color-scheme: dark) {
-  .valore {
-    color: #f8fafc;
-  }
+  font-size: 1.85rem;
+  font-weight: 850;
+  color: var(--testo-primario);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
 }
 
 .sottotitolo {
-  font-size: 0.82rem;
-  color: #94a3b8;
-  margin-top: 0.35rem;
+  font-size: 0.8rem;
+  color: var(--testo-terziario);
+  margin-top: 0.4rem;
 }
 
 .evidenziato {
-  border-color: #93c5fd;
-  background: linear-gradient(to bottom right, #ffffff, #eff6ff);
+  border-color: var(--accento-bordo);
+  background: linear-gradient(135deg, var(--bg-superficie), var(--accento-sfondo));
 }
 
-@media (prefers-color-scheme: dark) {
-  .evidenziato {
-    border-color: #1d4ed8;
-    background: linear-gradient(to bottom right, #1e293b, #1e3a8a);
-  }
+.evidenziato .valore {
+  color: var(--accento);
 }
 </style>

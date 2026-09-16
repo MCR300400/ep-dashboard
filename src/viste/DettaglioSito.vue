@@ -64,7 +64,10 @@ onMounted(() => {
   <div class="vista-dettaglio">
     <div class="testata-dettaglio">
       <div>
-        <RouterLink to="/" class="link-ritorno">&larr; Torna alla Panoramica</RouterLink>
+        <RouterLink to="/" class="link-ritorno">
+          <span class="freccia-ritorno">&larr;</span>
+          <span>Torna alla Panoramica</span>
+        </RouterLink>
         <h1 class="titolo-sito">Sito: <code>{{ id }}</code></h1>
       </div>
 
@@ -89,7 +92,7 @@ onMounted(() => {
       <SchedaMetrica
         etichetta="Durata Mediana"
         :valore="formattaSecondi(dati.durata_mediana)"
-        sottotitolo="Calcolata da eventi reali di chiusura"
+        sottotitolo="Calcolata da sessioni reali"
         evidenziato
       />
       <SchedaMetrica
@@ -108,7 +111,10 @@ onMounted(() => {
       <!-- Top 10 Pagine -->
       <div class="riquadro-sezione">
         <h2 class="titolo-sezione">Pagine più visitate</h2>
-        <div v-if="caricamento" class="testo-caricamento">Caricamento pagine...</div>
+        <div v-if="caricamento" class="testo-caricamento">
+          <div class="loader-cerchio"></div>
+          <p>Caricamento percorsi...</p>
+        </div>
         <div v-else-if="!dati.pagine || dati.pagine.length === 0" class="testo-vuoto">
           Nessuna visualizzazione registrata per questo periodo.
         </div>
@@ -126,7 +132,10 @@ onMounted(() => {
       <!-- Top 10 Referrer -->
       <div class="riquadro-sezione">
         <h2 class="titolo-sezione">Sorgenti di traffico (Referrer)</h2>
-        <div v-if="caricamento" class="testo-caricamento">Caricamento sorgenti...</div>
+        <div v-if="caricamento" class="testo-caricamento">
+          <div class="loader-cerchio"></div>
+          <p>Caricamento sorgenti...</p>
+        </div>
         <div v-else-if="!dati.referrer || dati.referrer.length === 0" class="testo-vuoto">
           Nessun referrer registrato (visite dirette o referrer non inviato).
         </div>
@@ -153,15 +162,27 @@ onMounted(() => {
 
 .link-ritorno {
   font-size: 0.85rem;
-  color: #2563eb;
+  color: var(--accento);
   text-decoration: none;
-  font-weight: 500;
-  display: inline-block;
-  margin-bottom: 0.5rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.65rem;
+  transition: transform 0.15s ease, color 0.15s ease;
 }
 
 .link-ritorno:hover {
-  text-decoration: underline;
+  color: var(--accento-hover);
+  transform: translateX(-2px);
+}
+
+.freccia-ritorno {
+  transition: transform 0.15s ease;
+}
+
+.link-ritorno:hover .freccia-ritorno {
+  transform: translateX(-2px);
 }
 
 .testata-dettaglio {
@@ -169,77 +190,70 @@ onMounted(() => {
   justify-content: space-between;
   align-items: flex-end;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 .titolo-sito {
-  font-size: 1.8rem;
-  font-weight: 800;
+  font-size: 2rem;
+  font-weight: 850;
+  color: var(--testo-primario);
+  letter-spacing: -0.025em;
 }
 
 .titolo-sito code {
-  color: #2563eb;
-  font-size: 0.9em;
+  color: var(--accento);
+  font-family: ui-monospace, monospace;
+  font-size: 0.88em;
+  background: var(--bg-superficie-elevata);
+  border: 1px solid var(--bordo-medio);
+  padding: 0.2rem 0.6rem;
+  border-radius: 8px;
 }
 
 .selettore-periodo {
-  display: flex;
-  background: #e2e8f0;
+  display: inline-flex;
+  background: var(--bg-superficie);
+  border: 1px solid var(--bordo-medio);
   padding: 3px;
-  border-radius: 8px;
+  border-radius: 9px;
   gap: 2px;
-}
-
-@media (prefers-color-scheme: dark) {
-  .selettore-periodo {
-    background: #1e293b;
-  }
 }
 
 .pulsante-periodo {
   border: none;
   background: transparent;
-  padding: 0.4rem 0.8rem;
+  padding: 0.42rem 0.85rem;
   border-radius: 6px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: #64748b;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--testo-secondario);
   cursor: pointer;
   transition: all 0.15s ease;
+  user-select: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  .pulsante-periodo {
-    color: #94a3b8;
-  }
+.pulsante-periodo:hover {
+  color: var(--testo-primario);
 }
 
 .pulsante-periodo.attivo {
-  background: #ffffff;
-  color: #0f172a;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  font-weight: 600;
-}
-
-@media (prefers-color-scheme: dark) {
-  .pulsante-periodo.attivo {
-    background: #334155;
-    color: #f8fafc;
-  }
+  background: var(--accento);
+  color: #ffffff;
+  box-shadow: 0 2px 8px var(--accento-sfondo-hover);
 }
 
 .avviso-errore {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #b91c1c;
-  padding: 1rem;
-  border-radius: 8px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #f87171;
+  padding: 1rem 1.25rem;
+  border-radius: 10px;
   font-size: 0.9rem;
 }
 
 .griglia-metriche {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1.25rem;
 }
 
@@ -250,30 +264,50 @@ onMounted(() => {
 }
 
 .riquadro-sezione {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
+  background: var(--bg-superficie);
+  border: 1px solid var(--bordo-medio);
+  border-radius: 14px;
   padding: 1.5rem;
-}
-
-@media (prefers-color-scheme: dark) {
-  .riquadro-sezione {
-    background: #1e293b;
-    border-color: #334155;
-  }
+  box-shadow: var(--ombra-scheda);
 }
 
 .titolo-sezione {
   font-size: 1.15rem;
-  font-weight: 700;
-  margin-bottom: 1.25rem;
+  font-weight: 750;
+  color: var(--testo-primario);
+  margin-bottom: 1.35rem;
+  letter-spacing: -0.01em;
 }
 
-.testo-caricamento,
-.testo-vuoto {
-  color: #94a3b8;
+.testo-caricamento {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--testo-terziario);
   font-size: 0.9rem;
-  padding: 1.5rem 0;
+  padding: 2rem 0;
+}
+
+.loader-cerchio {
+  width: 24px;
+  height: 24px;
+  border: 3px solid var(--bordo-medio);
+  border-top-color: var(--accento);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.testo-vuoto {
+  color: var(--testo-terziario);
+  font-size: 0.9rem;
+  padding: 2rem 0;
   text-align: center;
+  font-style: italic;
 }
 </style>

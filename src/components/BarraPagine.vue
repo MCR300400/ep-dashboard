@@ -19,16 +19,16 @@ defineProps({
 <style scoped>
 .barra-riga {
   position: relative;
-  border-radius: 6px;
+  border-radius: 8px;
   overflow: hidden;
-  margin-bottom: 0.5rem;
-  background: #f8fafc;
+  margin-bottom: 0.55rem;
+  background: var(--bg-superficie-elevata);
+  border: 1px solid var(--bordo-sottile);
+  transition: border-color 0.15s ease;
 }
 
-@media (prefers-color-scheme: dark) {
-  .barra-riga {
-    background: #0f172a;
-  }
+.barra-riga:hover {
+  border-color: var(--accento-bordo);
 }
 
 .barra-sfondo {
@@ -36,15 +36,9 @@ defineProps({
   top: 0;
   bottom: 0;
   left: 0;
-  background: rgba(37, 99, 235, 0.12);
-  border-radius: 6px;
+  background: var(--accento-sfondo);
+  border-radius: 8px;
   transition: width 0.3s ease;
-}
-
-@media (prefers-color-scheme: dark) {
-  .barra-sfondo {
-    background: rgba(37, 99, 235, 0.25);
-  }
 }
 
 .barra-contenuto {
@@ -52,26 +46,24 @@ defineProps({
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.6rem 0.85rem;
+  padding: 0.65rem 0.95rem;
   font-size: 0.88rem;
 }
 
 .barra-etichetta {
-  font-weight: 500;
+  font-weight: 550;
+  color: var(--testo-primario);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 80%;
+  max-width: 78%;
+  font-family: ui-monospace, monospace;
+  font-size: 0.84rem;
 }
 
 .barra-valore {
-  font-weight: 600;
-  color: #2563eb;
-}
-
-@media (prefers-color-scheme: dark) {
-  .barra-valore {
-    color: #60a5fa;
-  }
+  font-weight: 700;
+  color: var(--accento);
+  font-variant-numeric: tabular-nums;
 }
 </style>
