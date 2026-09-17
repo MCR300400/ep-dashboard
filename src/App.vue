@@ -1,8 +1,10 @@
 <script setup>
 import { RouterView, RouterLink } from 'vue-router'
 import { useTema } from './composables/useTema'
+import { useLingua } from './composables/useLingua'
 
 const { tema, toggleTema } = useTema()
+const { isItalian, isEnglish, setLingua, t } = useLingua()
 </script>
 
 <template>
@@ -17,7 +19,7 @@ const { tema, toggleTema } = useTema()
               </svg>
             </span>
             <span class="testo-brand">EP Analytics</span>
-            <span class="badge-ruolo">Admin</span>
+            <span class="badge-ruolo">{{ t('nav.admin') }}</span>
           </RouterLink>
         </div>
 
@@ -26,6 +28,29 @@ const { tema, toggleTema } = useTema()
             <span class="dot-sicurezza"></span>
             Cloudflare Access
           </span>
+
+          <!-- Switcher Lingua -->
+          <div class="selettore-lingua" role="group" aria-label="Selezione lingua">
+            <button
+              type="button"
+              class="btn-lingua"
+              :class="{ attivo: isItalian }"
+              @click="setLingua('it')"
+              title="Italiano"
+            >
+              IT
+            </button>
+            <span class="separatore-lingua">/</span>
+            <button
+              type="button"
+              class="btn-lingua"
+              :class="{ attivo: isEnglish }"
+              @click="setLingua('en')"
+              title="English"
+            >
+              EN
+            </button>
+          </div>
 
           <!-- Toggle Tema Dark / Light -->
           <button
@@ -71,7 +96,7 @@ const { tema, toggleTema } = useTema()
                 <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
               </svg>
             </span>
-            <span class="testo-tema">{{ tema === 'dark' ? 'Chiaro' : 'Scuro' }}</span>
+            <span class="testo-tema">{{ tema === 'dark' ? t('nav.temaChiaro') : t('nav.temaScuro') }}</span>
           </button>
         </div>
       </div>
@@ -83,11 +108,11 @@ const { tema, toggleTema } = useTema()
 
     <footer class="footer-dashboard">
       <div class="contenitore footer-flessibile">
-        <span>&copy; {{ new Date().getFullYear() }} EP Analytics Dashboard &bull; Multi-site Private Engine</span>
+        <span>&copy; {{ new Date().getFullYear() }} {{ t('nav.footer') }}</span>
         <div class="link-footer">
           <a href="https://github.com/MCR300400/ep-dashboard" target="_blank" rel="noopener noreferrer">GitHub</a>
           <span>&bull;</span>
-          <a href="https://edoardopippi.dev" target="_blank" rel="noopener noreferrer">Portfolio</a>
+          <a href="https://ep-portfolio.pages.dev" target="_blank" rel="noopener noreferrer">Portfolio</a>
         </div>
       </div>
     </footer>
@@ -202,6 +227,48 @@ body {
   border-radius: 50%;
   background-color: #10b981;
   box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
+}
+
+/* Switcher Lingua */
+.selettore-lingua {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.2rem 0.35rem;
+  border-radius: 8px;
+  border: 1px solid var(--bordo-medio);
+  background: var(--bg-superficie);
+  user-select: none;
+}
+
+.btn-lingua {
+  background: transparent;
+  border: none;
+  font-family: inherit;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--testo-terziario);
+  padding: 0.2rem 0.4rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  line-height: 1;
+}
+
+.btn-lingua:hover {
+  color: var(--testo-primario);
+}
+
+.btn-lingua.attivo {
+  background: var(--accento);
+  color: #fff;
+  font-weight: 700;
+}
+
+.separatore-lingua {
+  font-size: 0.72rem;
+  color: var(--testo-terziario);
+  opacity: 0.6;
 }
 
 .pulsante-tema {

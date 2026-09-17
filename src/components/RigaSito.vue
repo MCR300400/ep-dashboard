@@ -2,6 +2,9 @@
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import Sparkline from './Sparkline.vue'
+import { useLingua } from '../composables/useLingua'
+
+const { isItalian, t } = useLingua()
 
 const props = defineProps({
   sito: { type: Object, required: true },
@@ -11,14 +14,25 @@ const props = defineProps({
 // Calcolo stato: verde (<1h), ambra (>1h), grigio (nessun evento)
 const stato = computed(() => {
   if (!props.sito.ultimo_evento) {
-    return { colore: 'grigio', titolo: 'Nessun evento registrato' }
+    return {
+      colore: 'grigio',
+      titolo: isItalian.value ? 'Nessun evento registrato' : 'No events recorded'
+    }
   }
   const adesso = Date.now()
   const diffOre = (adesso - props.sito.ultimo_evento) / (1000 * 60 * 60)
   if (diffOre <= 1) {
-    return { colore: 'verde', titolo: 'Attivo (ultimo evento entro 1 ora)' }
+    return {
+      colore: 'verde',
+      titolo: isItalian.value ? 'Attivo (ultimo evento entro 1 ora)' : 'Active (last event within 1 hour)'
+    }
   }
-  return { colore: 'ambra', titolo: `Silenzio da ${Math.round(diffOre)} ore` }
+  return {
+    colore: 'ambra',
+    titolo: isItalian.value
+      ? `Silenzio da ${Math.round(diffOre)} ore`
+      : `Inactive for ${Math.round(diffOre)} hours`
+  }
 })
 
 const valoriSparkline = computed(() => {
@@ -33,13 +47,15 @@ const valoriSparkline = computed(() => {
     </td>
     <td class="colonna-sito">
       <RouterLink :to="`/siti/${sito.id}`" class="nome-sito">{{ sito.nome }}</RouterLink>
-      <span class="dominio-sito">{{ sito.dominio || 'Nessun dominio associato' }}</span>
+      <span class="dominio-sito">
+        {{ sito.dominio || (isItalian ? 'Nessun dominio associato' : 'No domain configured') }}
+      </span>
     </td>
     <td class="colonna-visite text-right">
-      <span class="valore-principale">{{ sito.visite.toLocaleString('it-IT') }}</span>
+      <span class="valore-principale">{{ sito.visite.toLocaleString(isItalian ? 'it-IT' : 'en-US') }}</span>
     </td>
     <td class="colonna-unici text-right">
-      <span class="valore-principale">{{ sito.unici.toLocaleString('it-IT') }}</span>
+      <span class="valore-principale">{{ sito.unici.toLocaleString(isItalian ? 'it-IT' : 'en-US') }}</span>
     </td>
     <td class="colonna-trend">
       <div class="sparkline-wrapper">
@@ -48,7 +64,7 @@ const valoriSparkline = computed(() => {
     </td>
     <td class="colonna-azione text-right">
       <RouterLink :to="`/siti/${sito.id}`" class="pulsante-dettaglio">
-        <span>Dettagli</span>
+        <span>{{ t('tabella.dettagli') }}</span>
         <span class="freccia-dettaglio">&rarr;</span>
       </RouterLink>
     </td>

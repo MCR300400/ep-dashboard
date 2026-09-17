@@ -4,6 +4,9 @@ import { RouterLink } from 'vue-router'
 import { getDettaglio } from '../api'
 import SchedaMetrica from '../components/SchedaMetrica.vue'
 import BarraPagine from '../components/BarraPagine.vue'
+import { useLingua } from '../composables/useLingua'
+
+const { isItalian, t } = useLingua()
 
 const props = defineProps({
   id: { type: String, required: true }
@@ -23,7 +26,9 @@ async function caricaDettagli() {
       dati.value = res
     }
   } catch (err) {
-    errore.value = 'Impossibile recuperare i dettagli del sito.'
+    errore.value = isItalian.value
+      ? 'Impossibile recuperare i dettagli del sito.'
+      : 'Unable to retrieve site details.'
     console.error(err)
   } finally {
     caricamento.value = false
@@ -31,7 +36,7 @@ async function caricaDettagli() {
 }
 
 const formattaSecondi = s => {
-  if (!s && s !== 0) return 'Dato assente'
+  if (!s && s !== 0) return isItalian.value ? 'Dato assente' : 'No data'
   const min = Math.floor(s / 60)
   const sec = s % 60
   return min > 0 ? `${min}m ${sec}s` : `${sec}s`
@@ -66,9 +71,9 @@ onMounted(() => {
       <div>
         <RouterLink to="/" class="link-ritorno">
           <span class="freccia-ritorno">&larr;</span>
-          <span>Torna alla Panoramica</span>
+          <span>{{ t('dettaglio.ritorno') }}</span>
         </RouterLink>
-        <h1 class="titolo-sito">Sito: <code>{{ id }}</code></h1>
+        <h1 class="titolo-sito">{{ t('dettaglio.sito') }} <code>{{ id }}</code></h1>
       </div>
 
       <div class="selettore-periodo">
@@ -79,7 +84,7 @@ onMounted(() => {
           :class="{ attivo: giorni === p }"
           @click="giorni = p"
         >
-          Ultimi {{ p }} giorni
+          {{ t('periodo.ultimi') }} {{ p }} {{ t('periodo.giorni') }}
         </button>
       </div>
     </div>
@@ -90,33 +95,33 @@ onMounted(() => {
 
     <div class="griglia-metriche">
       <SchedaMetrica
-        etichetta="Durata Mediana"
+        :etichetta="t('dettaglio.durataMediana')"
         :valore="formattaSecondi(dati.durata_mediana)"
-        sottotitolo="Calcolata da sessioni reali"
+        :sottotitolo="t('dettaglio.durataSotto')"
         evidenziato
       />
       <SchedaMetrica
-        etichetta="Visualizzazioni Pagine"
-        :valore="totaleVisitePagine.toLocaleString('it-IT')"
-        :sottotitolo="`Top percorsi negli ultimi ${giorni} gg`"
+        :etichetta="t('dettaglio.pagineVisitate')"
+        :valore="totaleVisitePagine.toLocaleString(isItalian ? 'it-IT' : 'en-US')"
+        :sottotitolo="isItalian ? `Top percorsi negli ultimi ${giorni} gg` : `Top routes in last ${giorni} days`"
       />
       <SchedaMetrica
-        etichetta="Fonti Referrer Uniche"
+        :etichetta="t('dettaglio.referrerUnici')"
         :valore="(dati.referrer || []).length"
-        sottotitolo="Domini esterni tracciati"
+        :sottotitolo="t('dettaglio.referrerSotto')"
       />
     </div>
 
     <div class="griglia-sezioni">
       <!-- Top 10 Pagine -->
       <div class="riquadro-sezione">
-        <h2 class="titolo-sezione">Pagine più visitate</h2>
+        <h2 class="titolo-sezione">{{ t('dettaglio.topPagine') }}</h2>
         <div v-if="caricamento" class="testo-caricamento">
           <div class="loader-cerchio"></div>
-          <p>Caricamento percorsi...</p>
+          <p>{{ t('dettaglio.caricamentoPercorsi') }}</p>
         </div>
         <div v-else-if="!dati.pagine || dati.pagine.length === 0" class="testo-vuoto">
-          Nessuna visualizzazione registrata per questo periodo.
+          {{ t('dettaglio.nessunPercorso') }}
         </div>
         <div v-else class="lista-barre">
           <BarraPagine
@@ -131,13 +136,13 @@ onMounted(() => {
 
       <!-- Top 10 Referrer -->
       <div class="riquadro-sezione">
-        <h2 class="titolo-sezione">Sorgenti di traffico (Referrer)</h2>
+        <h2 class="titolo-sezione">{{ t('dettaglio.topReferrer') }}</h2>
         <div v-if="caricamento" class="testo-caricamento">
           <div class="loader-cerchio"></div>
-          <p>Caricamento sorgenti...</p>
+          <p>{{ t('dettaglio.caricamentoSorgenti') }}</p>
         </div>
         <div v-else-if="!dati.referrer || dati.referrer.length === 0" class="testo-vuoto">
-          Nessun referrer registrato (visite dirette o referrer non inviato).
+          {{ t('dettaglio.nessunReferrer') }}
         </div>
         <div v-else class="lista-barre">
           <BarraPagine

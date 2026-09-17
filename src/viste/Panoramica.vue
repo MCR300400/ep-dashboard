@@ -3,6 +3,9 @@ import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { getPanoramica } from '../api'
 import SchedaMetrica from '../components/SchedaMetrica.vue'
 import RigaSito from '../components/RigaSito.vue'
+import { useLingua } from '../composables/useLingua'
+
+const { isItalian, t } = useLingua()
 
 const giorni = ref(7)
 const caricamento = ref(true)
@@ -31,7 +34,9 @@ async function caricaDati(silenzioso = false) {
       dati.value = res
     }
   } catch (err) {
-    errore.value = 'Impossibile caricare i dati della panoramica. Verifica la connessione o i permessi di Cloudflare Access.'
+    errore.value = isItalian.value
+      ? 'Impossibile caricare i dati della panoramica. Verifica la connessione o i permessi di Cloudflare Access.'
+      : 'Unable to load overview data. Check your network connection or Cloudflare Access permissions.'
     console.error(err)
   } finally {
     caricamento.value = false
@@ -111,8 +116,8 @@ onUnmounted(() => {
   <div class="vista-panoramica">
     <div class="intestazione-panoramica">
       <div>
-        <h1 class="titolo-sezione">Panoramica Analytics</h1>
-        <p class="sottotitolo">Monitoraggio globale del portfolio e dei siti collegati</p>
+        <h1 class="titolo-sezione">{{ t('panoramica.titolo') }}</h1>
+        <p class="sottotitolo">{{ t('panoramica.sottotitolo') }}</p>
       </div>
 
       <div class="selettore-periodo">
@@ -123,7 +128,7 @@ onUnmounted(() => {
           :class="{ attivo: giorni === p }"
           @click="giorni = p"
         >
-          Ultimi {{ p }} giorni
+          {{ t('periodo.ultimi') }} {{ p }} {{ t('periodo.giorni') }}
         </button>
       </div>
     </div>
@@ -135,25 +140,25 @@ onUnmounted(() => {
     <!-- Schede Metriche in alto -->
     <div class="griglia-metriche">
       <SchedaMetrica
-        etichetta="Visite Totali"
-        :valore="totaleVisite.toLocaleString('it-IT')"
-        :sottotitolo="`Negli ultimi ${giorni} giorni`"
+        :etichetta="t('metrica.visiteTotali')"
+        :valore="totaleVisite.toLocaleString(isItalian ? 'it-IT' : 'en-US')"
+        :sottotitolo="isItalian ? `Negli ultimi ${giorni} giorni` : `In the last ${giorni} days`"
         evidenziato
       />
       <SchedaMetrica
-        etichetta="Visitatori Unici"
-        :valore="totaleUnici.toLocaleString('it-IT')"
-        :sottotitolo="`Hash visitatore su D1`"
+        :etichetta="t('metrica.unici')"
+        :valore="totaleUnici.toLocaleString(isItalian ? 'it-IT' : 'en-US')"
+        :sottotitolo="t('metrica.uniciSotto')"
       />
       <SchedaMetrica
-        etichetta="Siti Censiti"
+        :etichetta="t('metrica.sitiCensiti')"
         :valore="sitiAttivi"
-        sottotitolo="Monitorati attivamente"
+        :sottotitolo="t('metrica.sitiCensitiSotto')"
       />
       <SchedaMetrica
-        etichetta="Consumo Quota Ingest"
+        :etichetta="t('metrica.consumoQuota')"
         :valore="stimaQuota"
-        sottotitolo="Su 100k rich/giorno free"
+        :sottotitolo="t('metrica.consumoQuotaSotto')"
       />
     </div>
 
@@ -161,8 +166,8 @@ onUnmounted(() => {
     <div class="riquadro-tabella">
       <div class="testata-tabella">
         <div class="titolo-tabella-gruppo">
-          <h2>Siti Monitorati</h2>
-          <span class="badge-conteggio">{{ (dati.siti || []).length }} siti</span>
+          <h2>{{ t('tabella.titolo') }}</h2>
+          <span class="badge-conteggio">{{ (dati.siti || []).length }} {{ t('tabella.badge') }}</span>
         </div>
 
         <!-- Timer Auto-refresh Interattivo -->
@@ -170,11 +175,18 @@ onUnmounted(() => {
           <div
             class="pillola-timer"
             :class="{ inattivo: inPausa, aggiornando: aggiornamentoInCorso }"
-            :title="inPausa ? 'Auto-refresh in pausa' : `Prossimo refresh automatico tra ${secondiRimanenti} secondi`"
+            :title="inPausa
+              ? (isItalian ? 'Auto-refresh in pausa' : 'Auto-refresh paused')
+              : (isItalian ? `Prossimo refresh automatico tra ${secondiRimanenti} secondi` : `Next refresh in ${secondiRimanenti} seconds`)"
           >
             <span class="dot-timer" :class="{ pausa: inPausa, pulse: !inPausa && !aggiornamentoInCorso }"></span>
             <span class="testo-timer">
-              {{ inPausa ? 'In pausa' : (aggiornamentoInCorso ? 'Aggiornamento...' : `Auto-refresh in ${secondiRimanenti}s`) }}
+              {{ inPausa
+                ? t('refresh.inPausa')
+                : (aggiornamentoInCorso
+                    ? t('refresh.aggiornamento')
+                    : `${t('refresh.autoIn')} ${secondiRimanenti}s`)
+              }}
             </span>
           </div>
 
@@ -182,7 +194,7 @@ onUnmounted(() => {
           <button
             type="button"
             class="btn-timer-azione"
-            :title="inPausa ? 'Riprendi auto-refresh' : 'Metti in pausa auto-refresh'"
+            :title="inPausa ? t('refresh.riprendi') : t('refresh.pausa')"
             @click="togglePausa"
           >
             <svg v-if="!inPausa" width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
@@ -199,7 +211,7 @@ onUnmounted(() => {
             type="button"
             class="btn-timer-azione btn-aggiorna"
             :disabled="aggiornamentoInCorso"
-            title="Aggiorna dati adesso"
+            :title="isItalian ? 'Aggiorna dati adesso' : 'Refresh data now'"
             @click="aggiornaManualmente"
           >
             <svg
@@ -215,26 +227,26 @@ onUnmounted(() => {
             >
               <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
             </svg>
-            <span class="testo-btn-aggiorna">Aggiorna</span>
+            <span class="testo-btn-aggiorna">{{ t('refresh.aggiorna') }}</span>
           </button>
         </div>
       </div>
 
       <div v-if="caricamento && (!dati.siti || dati.siti.length === 0)" class="stato-caricamento">
         <div class="loader-cerchio"></div>
-        <p>Caricamento dati dal cluster D1...</p>
+        <p>{{ t('tabella.caricamento') }}</p>
       </div>
 
       <div v-else class="tabella-wrapper">
         <table class="tabella-siti">
           <thead>
             <tr>
-              <th style="width: 44px">Stato</th>
-              <th>Sito</th>
-              <th class="text-right">Visite</th>
-              <th class="text-right">Unici</th>
-              <th class="text-center" style="width: 120px">Trend</th>
-              <th class="text-right colonna-azione-head">Azione</th>
+              <th style="width: 44px">{{ t('tabella.stato') }}</th>
+              <th>{{ t('tabella.sito') }}</th>
+              <th class="text-right">{{ t('tabella.visite') }}</th>
+              <th class="text-right">{{ t('tabella.unici') }}</th>
+              <th class="text-center" style="width: 120px">{{ t('tabella.trend') }}</th>
+              <th class="text-right colonna-azione-head">{{ t('tabella.azione') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -246,7 +258,7 @@ onUnmounted(() => {
             />
             <tr v-if="!dati.siti || dati.siti.length === 0">
               <td colspan="6" class="testo-vuoto">
-                Nessun evento registrato per il periodo selezionato.
+                {{ t('tabella.nessunEvento') }}
               </td>
             </tr>
           </tbody>
