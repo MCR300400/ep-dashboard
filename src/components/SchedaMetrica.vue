@@ -19,12 +19,13 @@ defineProps({
 .scheda-metrica {
   background: var(--bg-superficie);
   border: 1px solid var(--bordo-medio);
-  border-radius: 12px;
-  padding: 1.25rem 1.4rem;
+  border-radius: 8px;
+  padding: 1.2rem 1.35rem;
   display: flex;
   flex-direction: column;
   box-shadow: var(--ombra-scheda);
-  transition: transform 0.18s ease, border-color 0.18s ease;
+  position: relative;
+  transition: transform 0.16s ease, border-color 0.16s ease;
 }
 
 .scheda-metrica:hover {
@@ -33,25 +34,24 @@ defineProps({
 }
 
 .etichetta {
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  font-size: 0.8rem;
+  font-weight: 600;
   color: var(--testo-terziario);
   margin-bottom: 0.45rem;
+  letter-spacing: -0.01em;
 }
 
 .valore {
   font-size: 1.85rem;
-  font-weight: 850;
+  font-weight: 800;
   color: var(--testo-primario);
   line-height: 1.15;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
   font-variant-numeric: tabular-nums;
 }
 
 .sottotitolo {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: var(--testo-terziario);
   margin-top: 0.4rem;
 }
