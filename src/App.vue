@@ -120,6 +120,10 @@ const { isItalian, isEnglish, setLingua, t } = useLingua()
 </template>
 
 <style>
+html {
+  scroll-behavior: smooth;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -132,8 +136,14 @@ body {
   color: var(--testo-primario);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-  transition: background-color 0.25s ease, color 0.2s ease;
+  text-rendering: optimizeSpeed;
+  overflow-x: clip;
+  -webkit-overflow-scrolling: touch;
+}
+
+button, a {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .contenitore {
@@ -154,10 +164,14 @@ body {
   z-index: 40;
   background: var(--header-bg);
   border-bottom: 1px solid var(--bordo-sottile);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  padding: 0.85rem 0;
-  transition: background-color 0.25s ease, border-color 0.25s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  padding-top: calc(0.85rem + env(safe-area-inset-top, 0px));
+  padding-bottom: 0.85rem;
 }
 
 .testata-flessibile {
