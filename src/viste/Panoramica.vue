@@ -347,8 +347,7 @@ onUnmounted(() => {
 .riquadro-tabella {
   background: var(--bg-superficie);
   border: 1px solid var(--bordo-medio);
-  border-radius: 14px;
-  box-shadow: var(--ombra-scheda);
+  border-radius: 8px;
   overflow: hidden;
 }
 

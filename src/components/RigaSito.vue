@@ -169,17 +169,17 @@ const valoriSparkline = computed(() => {
   border-radius: 8px;
   background: var(--accento-sfondo);
   border: 1px solid var(--accento-bordo);
-  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
   user-select: none;
   box-sizing: border-box;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .pulsante-dettaglio:hover {
   background: var(--accento);
   color: #ffffff;
   border-color: var(--accento);
-  transform: translateY(-1px);
-  box-shadow: 0 3px 10px var(--accento-sfondo-hover);
 }
 
 .freccia-dettaglio {

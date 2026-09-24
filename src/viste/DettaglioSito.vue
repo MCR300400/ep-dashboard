@@ -271,9 +271,8 @@ onMounted(() => {
 .riquadro-sezione {
   background: var(--bg-superficie);
   border: 1px solid var(--bordo-medio);
-  border-radius: 14px;
+  border-radius: 8px;
   padding: 1.5rem;
-  box-shadow: var(--ombra-scheda);
 }
 
 .titolo-sezione {

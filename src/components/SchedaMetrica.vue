@@ -23,13 +23,11 @@ defineProps({
   padding: 1.2rem 1.35rem;
   display: flex;
   flex-direction: column;
-  box-shadow: var(--ombra-scheda);
   position: relative;
-  transition: transform 0.16s ease, border-color 0.16s ease;
+  transition: border-color 0.16s ease;
 }
 
 .scheda-metrica:hover {
-  transform: translateY(-2px);
   border-color: var(--accento-bordo);
 }
 
